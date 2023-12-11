@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcul PE</title>
+</head>
+
+<body>
+
+  <div>
+    <label for="allocationBasePE">Allocation de Base Pôle Emploi</label>
+    <input type="text" id="allocationBasePE" oninput="updateAllocationBasePE()" value="1300">
+  </div>
+
+  <br>
+
+  <div>
+    <label for="revenusInput">Revenus du mois</label>
+    <input type="text" id="revenusInput" oninput="calculerCA()" value="0">
+  </div>
+
+  <br>
+
+  <div>
+    <label for="urssafImpots">Urssaf et impôts à payer</label>
+    <input type="text" id="urssafImpots" oninput="updateUrssafImpots()" value="0">
+  </div>
+  <div>
+    <a href="https://mon-entreprise.urssaf.fr/simulateurs/auto-entrepreneur" target="_blank">Simulateur revenus Auto-entrepreneur</a>
+  </div>
+
+  <p>Chiffre d'Affaire : <span id="resultatCA">0</span> €</p>
+
+  <p>Décaration PE : <span id="declarationPE">0</span> €</p>
+  <p>Reste apres Impôts et Urssaf : <span id="resteApresUrssafImpots">0</span> €</p>
+  <p>Calcul allocation PE (souvent moins que cela) : <span id="calculAllocationPE">0</span> €</p>
+  <p>Gains totaux : <span id="gainsTotaux">0</span> €</p>
+
+  <script>
+    let allocationBasePE = 1300
+    let CA = 0;
+    let urssafImpots = 0
+    let declarationPE = 0
+    let resteApresUrssafImpots = 0
+    let calculAllocationPE = 0
+    let gainsTotaux = 0
+
+    function calcul() {
+      declarationPE = CA / 2
+      resteApresUrssafImpots = CA - urssafImpots
+      calculAllocationPE = Math.max(0, allocationBasePE - (0.7 * declarationPE));
+    
+      gainsTotaux = resteApresUrssafImpots + calculAllocationPE
+
+      document.getElementById('declarationPE').innerText = declarationPE.toFixed(2);
+      document.getElementById('resteApresUrssafImpots').innerText = resteApresUrssafImpots.toFixed(2);
+      document.getElementById('calculAllocationPE').innerText = calculAllocationPE.toFixed(2);
+      document.getElementById('gainsTotaux').innerText = gainsTotaux.toFixed(2);
+    }
+
+
+    function updateAllocationBasePE() {
+      let newValue = document.getElementById('allocationBasePE').value;
+      allocationBasePE = Number(newValue);
+      calcul()
+    }
+
+    function updateUrssafImpots() {
+      let newValue = document.getElementById('urssafImpots').value;
+      urssafImpots = Number(newValue);
+      calcul()
+    }
+
+    function calculerCA() {
+      let input = document.getElementById('revenusInput').value;
+      try {
+        CA = eval(input);
+        document.getElementById('resultatCA').innerText = CA.toFixed(2) + " €";
+        console.log(CA);
+      } catch (e) {
+        document.getElementById('resultatCA').innerText = "Erreur de calcul";
+      }
+      calcul()
+    }
+  </script>
+</body>
+
+</html>
